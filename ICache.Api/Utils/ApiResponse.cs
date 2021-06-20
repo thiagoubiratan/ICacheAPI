@@ -18,6 +18,8 @@ namespace ICache.Api.Utils
         {
             switch (statusCode)
             {
+                case 200:
+                    return "Opração realizada com sucesso!";
                 case 401:
                     return "Não autorizado (não autenticado)";
                 case 404:

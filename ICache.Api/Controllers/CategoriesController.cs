@@ -6,8 +6,6 @@ using ICache.Core.Interfaces.Repositories;
 using ICache.Core.Interfaces.UoW;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ICache.Api.Controllers
@@ -47,41 +45,23 @@ namespace ICache.Api.Controllers
             return Ok(new ApiOkResponse(category));
         }
 
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutCategoriaAsync(long id, Category category)
-        // {
-        //     if (id != category.Id)
-        //     {
-        //         return BadRequest();
-        //     }
+        [HttpPut()]
+        public async Task<IActionResult> PutCategoriaAsync(Category category)
+        {
+            //if (await _categoryRepository.FindByIdAsync(category.Id) == null) return NotFound(new ApiResponse(404, $"{ITEM_NOT_FOUND}"));
+            _categoryRepository.Update(category);
+            await _uow.Commit();
+            return Ok(new ApiOkResponse(category));
+        }
 
-        //     try
-        //     {
-        //         _categoryRepository.Update(category);
-        //         await _uow.Commit();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         await _uow.Rollback();
-        //         return NotFound();
-        //     }
-
-        //     return NoContent();
-        // }
-
-        // [HttpDelete("{id}")]
-        // public async Task<ActionResult<Category>> DeleteCategoria(long id)
-        // {
-        //     var category = await _categoryRepository.FindByIdAsync(id);
-        //     if (category == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     _categoryRepository.Remove(category);
-        //     await _uow.Commit();
-
-        //     return category;
-        // }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Category>> DeleteCategoria(long id)
+        {
+            var category = await _categoryRepository.FindByIdAsync(id);
+            if (category == null) return NotFound(new ApiResponse(404, $"{ITEM_NOT_FOUND}"));
+            _categoryRepository.Remove(category);
+            await _uow.Commit();
+            return category;
+        }
     }
 }
